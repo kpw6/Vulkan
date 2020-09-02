@@ -72,11 +72,12 @@ void gf3d_sprite_free(Sprite *sprite);
  * @brief draw a sprite frame to the current buffer frame
  * @param sprite the sprite to draw
  * @param position where on the screen to draw the sprite
+ * @param scale amount to scale the sprite by.  (1,1) is no scale
  * @param frame the frame of the sprite to draw
  * @param buffer_frame the current rendering context
  * @param commandBuffer the command to use to execute the draw call
  */
-void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Uint32 frame, Uint32 buffer_frame,VkCommandBuffer commandBuffer);
+void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 frame, Uint32 buffer_frame,VkCommandBuffer commandBuffer);
 
 /**
  * @brief get the binding description for a sprite

@@ -24,6 +24,7 @@ int main(int argc,char *argv[])
     Model *model = NULL;
     Matrix4 modelMat;
     Sprite *mouse = NULL;
+    Sprite *hud = NULL;
     int mousex,mousey;
     Uint32 mouseFrame = 0;
     
@@ -56,6 +57,7 @@ int main(int argc,char *argv[])
         vector3d(1,0,0));
     
     mouse = gf3d_sprite_load("images/pointer.png",32,32, 16);
+    hud = gf3d_sprite_load("images/hud.png",-1,-1,0);
     // main game loop
     slog("gf3d main loop begin");
     while(!done)
@@ -63,7 +65,6 @@ int main(int argc,char *argv[])
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         SDL_GetMouseState(&mousex,&mousey);
-        slog("mouse (%i,%i)",mousex,mousey);
         //update game things here
         
         gf3d_vgraphics_rotate_camera(0.001);
@@ -84,7 +85,8 @@ int main(int argc,char *argv[])
         // 2D overlay rendering
             commandBuffer = gf3d_command_rendering_begin(bufferFrame,gf3d_vgraphics_get_graphics_overlay_pipeline());
 
-                gf3d_sprite_draw(mouse,vector2d(mousex,mousey),mouseFrame, bufferFrame,commandBuffer);
+                gf3d_sprite_draw(hud,vector2d(0,0),vector2d(2,2),0, bufferFrame,commandBuffer);
+                gf3d_sprite_draw(mouse,vector2d(mousex,mousey),vector2d(1,1),mouseFrame, bufferFrame,commandBuffer);
                 
             gf3d_command_rendering_end(commandBuffer);
             
