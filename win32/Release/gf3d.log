@@ -1,0 +1,10 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  game.c
+C:\Users\KPW59\Documents\Vulkan\Vulkan\src\game.c(44,22): warning C4305: 'function': truncation from 'double' to 'float'
+  gf3d_vgraphics.c
+C:\Users\KPW59\Documents\Vulkan\Vulkan\src\gf3d_vgraphics.c(110,26): warning C4305: 'function': truncation from 'double' to 'float'
+C:\Users\KPW59\Documents\Vulkan\Vulkan\src\gf3d_vgraphics.c(262,32): warning C4113: 'void (__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
+C:\Users\KPW59\Documents\Vulkan\Vulkan\src\gf3d_vgraphics.c(325,48): warning C4090: 'function': different 'const' qualifiers
+C:\Users\KPW59\Documents\Vulkan\Vulkan\src\gf3d_vgraphics.c(590,43): warning C4113: 'void (__cdecl *)()' differs in parameter lists from 'void (__cdecl *)(void)'
+C:\Users\KPW59\Documents\Vulkan\Vulkan\src\gf3d_vgraphics.c(661,40): error C2296: '*': illegal, left operand has type 'Matrix4 (*)'
+C:\Users\KPW59\Documents\Vulkan\Vulkan\src\gf3d_vgraphics.c(661,5): warning C4033: 'gf3d_vgraphics_get_view_matrix' must return a value
