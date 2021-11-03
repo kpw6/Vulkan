@@ -67,13 +67,15 @@ void entity_free(Entity *self)
 }
 
 
-void entity_draw(Entity *self,Uint32 bufferFrame,VkCommandBuffer commandBuffer)
+void entity_draw(Entity *self)
 {
     if (!self)return;
-    gf3d_model_draw(self->model,bufferFrame,commandBuffer,self->modelMat);
+    gf3d_model_draw(self->model,self->modelMat);
+    vector3d_add(self->min, self->position, vector3d(-0.1, -0.1, -0.1));
+    vector3d_add(self->max, self->position, vector3d(0.1, 0.1, 0.1));
 }
 
-void entity_draw_all(Uint32 bufferFrame,VkCommandBuffer commandBuffer)
+void entity_draw_all()
 {
     int i;
     for (i = 0; i < entity_manager.entity_count; i++)
@@ -82,7 +84,7 @@ void entity_draw_all(Uint32 bufferFrame,VkCommandBuffer commandBuffer)
         {
             continue;// skip this iteration of the loop
         }
-        entity_draw(&entity_manager.entity_list[i],bufferFrame,commandBuffer);
+        entity_draw(&entity_manager.entity_list[i]);
     }
 }
 
@@ -124,6 +126,7 @@ void entity_update(Entity *self)
     gfc_matrix_translate(self->modelMat,self->position);
     
     if (self->update)self->update(self);
+
 }
 
 void entity_update_all()

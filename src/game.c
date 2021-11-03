@@ -15,6 +15,7 @@
 #include "agumon.h"
 #include "player.h"
 #include "world.h"
+#include "platforms.h"
 
 int main(int argc,char *argv[])
 {
@@ -22,8 +23,6 @@ int main(int argc,char *argv[])
     int a;
     Uint8 validate = 0;
     const Uint8 * keys;
-    Uint32 bufferFrame = 0;
-    VkCommandBuffer commandBuffer;
     
     World *w;
     
@@ -56,7 +55,8 @@ int main(int argc,char *argv[])
     gf3d_camera_set_scale(vector3d(1,1,1));
     
     slog("gf3d main loop begin");
-    player_new(vector3d(25,0,50));
+    Entity* test = player_new(vector3d(0,0,0));
+    Entity* newb = platforms_new(vector3d(0, 20, 100));
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
@@ -68,16 +68,14 @@ int main(int argc,char *argv[])
 
         // configure render command for graphics command pool
         // for each mesh, get a command and configure it from the pool
-        bufferFrame = gf3d_vgraphics_render_begin();
-        gf3d_pipeline_reset_frame(gf3d_vgraphics_get_graphics_pipeline(),bufferFrame);
-            commandBuffer = gf3d_command_rendering_begin(bufferFrame);
+        gf3d_vgraphics_render_start();
 
-                world_draw(w,bufferFrame,commandBuffer);
-                entity_draw_all(bufferFrame,commandBuffer);
+                world_draw(w);
+                entity_draw_all();
 
-            gf3d_command_rendering_end(commandBuffer);
+                collision_detection_test(test, newb);
             
-        gf3d_vgraphics_render_end(bufferFrame);
+        gf3d_vgraphics_render_end();
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
     }    

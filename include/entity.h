@@ -16,7 +16,10 @@ typedef struct Entity_S
     void       (*draw)(struct Entity_S *self); /**<pointer to an optional extra draw funciton*/
     void       (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void       (*onDeath)(struct Entity_S *self); /**<pointer to an funciton to call when the entity dies*/
-    
+    void       (*touch)(struct Entity_S* self, struct Entity_S *other); /**<pointer to the on touch function*/
+    void       (*hitbox)(struct Entity_S* self, Vector3D min, Vector3D max); /**<pointer to a players hitbox>*/
+
+    Vector3D    min, max; /**<The min and max of points>*/
     Vector3D    position;  
     Vector3D    velocity;
     Vector3D    acceleration;
@@ -24,6 +27,8 @@ typedef struct Entity_S
     
     Vector3D    scale;
     Vector3D    rotation;
+
+    float gravity; //float used for strength of gravity
     
     Uint32      health;     /**<entity dies when it reaches zero*/
     // WHATEVER ELSE WE MIGHT NEED FOR ENTITIES
@@ -54,17 +59,13 @@ void entity_free(Entity *self);
 /**
  * @brief Draw an entity in the current frame
  * @param self the entity in question
- * @param bufferFrame the current rending frame index
- * @param commandBuffer the current command buffer to populate with the draw call
  */
-void entity_draw(Entity *self,Uint32 bufferFrame,VkCommandBuffer commandBuffer);
+void entity_draw(Entity *self);
 
 /**
  * @brief draw ALL active entities
- * @param bufferFrame the current rending frame index
- * @param commandBuffer the current command buffer to populate with the draw call
  */
-void entity_draw_all(Uint32 bufferFrame,VkCommandBuffer commandBuffer);
+void entity_draw_all();
 
 /**
  * @brief Call an entity's think function if it exists
@@ -81,5 +82,10 @@ void entity_think_all();
  * @brief run the update functions for ALL active entities
  */
 void entity_update_all();
+
+/**
+ * @brief what an entity does on touch of other entity
+ */
+void entity_on_touch(Entity *self, Entity *other);
 
 #endif
