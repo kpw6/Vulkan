@@ -8,7 +8,7 @@
 void player_think(Entity *self);
 void player_update(Entity *self);
 
-Entity *player_new(Vector3D position)
+Entity* player_new(Vector3D position, int player)
 {
     Entity *ent = NULL;
     
@@ -24,7 +24,10 @@ Entity *player_new(Vector3D position)
     vector3d_copy(ent->position,position);
     ent->rotation.x = M_PI;
     gf3d_camera_set_rotation(ent->rotation);
-    //applyGravity(ent);
+    applyGravity(ent);
+    ent->scale = vector3d(0.1, 0.1, 0.1);
+    gfc_matrix_scale(ent->modelMat, ent->scale);
+    ent->velocity = vector3d(1, 1, 1);
     return ent;
 }
 
@@ -43,45 +46,32 @@ void player_think(Entity *self)
     vector3d_set_magnitude(&right,0.1);
     vector3d_set_magnitude(&up,0.1);
 
-    if (keys[SDL_SCANCODE_W])
+    if (keys[SDL_SCANCODE_UP])
     {   
-        vector3d_add(self->position,self->position,forward);
-        vector3d_add(self->min, self->min, forward);
-        vector3d_add(self->max, self->max, forward);
-    }
-    if (keys[SDL_SCANCODE_S])
-    {
-        vector3d_add(self->position,self->position,-forward);   
-        vector3d_add(self->min, self->min, -forward);
-        vector3d_add(self->max, self->max, -forward);
-    }
-    if (keys[SDL_SCANCODE_D])
-    {
-        vector3d_add(self->position,self->position,right);
-        vector3d_add(self->min, self->min, right);
-        vector3d_add(self->max, self->max, right);
-    }
-    if (keys[SDL_SCANCODE_A])    
-    {
         vector3d_add(self->position,self->position,-right);
-        vector3d_add(self->min, self->min, -right);
-        vector3d_add(self->max, self->max, -right);
     }
-    if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.010;
-    if (keys[SDL_SCANCODE_Z])self->position.z -= 0.010;   
-    if (keys[SDL_SCANCODE_UP])self->rotation.x -= 0.030;
-    if (keys[SDL_SCANCODE_DOWN])self->rotation.x += 0.030;
-    if (keys[SDL_SCANCODE_LEFT])self->rotation.z -= 0.030;
-    if (keys[SDL_SCANCODE_RIGHT])self->rotation.z += 0.030;
+    if (keys[SDL_SCANCODE_DOWN])
+    {
+        vector3d_add(self->position,self->position,right);   
+    }
+    if (keys[SDL_SCANCODE_LEFT])
+    {
+        vector3d_add(self->position,self->position,-forward);
+    }
+    if (keys[SDL_SCANCODE_RIGHT])    
+    {
+        vector3d_add(self->position,self->position,forward);
+    }
+    if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.010;  
 
 }
 
 void player_update(Entity *self)
 {
     if (!self)return;
-    gf3d_camera_set_position(self->position, vector3d(0, 10, 0));
+    gf3d_camera_set_position(self->position, vector3d(0, 5, 0));
     //gf3d_camera_set_rotation(self->rotation);
-    //physics_update(self);
+    physics_update(self);
 }
 
 /*eol@eof*/

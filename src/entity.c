@@ -71,8 +71,8 @@ void entity_draw(Entity *self)
 {
     if (!self)return;
     gf3d_model_draw(self->model,self->modelMat);
-    vector3d_add(self->min, self->position, vector3d(-0.1, -0.1, -0.1));
-    vector3d_add(self->max, self->position, vector3d(0.1, 0.1, 0.1));
+    vector3d_add(self->min, self->position, vector3d(-.1, -.1, -.1));
+    vector3d_add(self->max, self->position, vector3d(.1, .1, .1));
 }
 
 void entity_draw_all()
@@ -113,15 +113,15 @@ void entity_update(Entity *self)
     if (!self)return;
     // HANDLE ALL COMMON UPDATE STUFF
     
-    vector3d_add(self->position,self->position,self->velocity);
-    vector3d_add(self->velocity,self->acceleration,self->velocity);
+    //vector3d_add(self->position,self->position,self->velocity);
+    //vector3d_add(self->velocity,self->acceleration,self->velocity);
     
     gfc_matrix_identity(self->modelMat);
     gfc_matrix_scale(self->modelMat,self->scale);
     
-    gfc_matrix_rotate(self->modelMat,self->modelMat,self->rotation.z,vector3d(0,0,1));
-    gfc_matrix_rotate(self->modelMat,self->modelMat,self->rotation.y,vector3d(0,1,0));
-    gfc_matrix_rotate(self->modelMat,self->modelMat,self->rotation.x,vector3d(1,0,0));
+    //gfc_matrix_rotate(self->modelMat,self->modelMat,self->rotation.z,vector3d(0,0,1));
+    //gfc_matrix_rotate(self->modelMat,self->modelMat,self->rotation.y,vector3d(0,1,0));
+    //gfc_matrix_rotate(self->modelMat,self->modelMat,self->rotation.x,vector3d(1,0,0));
     
     gfc_matrix_translate(self->modelMat,self->position);
     

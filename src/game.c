@@ -16,6 +16,7 @@
 #include "player.h"
 #include "world.h"
 #include "platforms.h"
+#include "powerups.h"
 
 int main(int argc,char *argv[])
 {
@@ -55,8 +56,13 @@ int main(int argc,char *argv[])
     gf3d_camera_set_scale(vector3d(1,1,1));
     
     slog("gf3d main loop begin");
-    Entity* test = player_new(vector3d(0,0,0));
-    Entity* newb = platforms_new(vector3d(0, 20, 100));
+    player_new(vector3d(0,0,0), 0);
+    platforms_new(vector3d(0, 20, -10));
+    powerups_new(vector3d(5, 10, -19), 0);
+    for (int i = 0; i <= 4; i++) {
+       powerups_new(vector3d(i + 5, i + 10, -19), i);
+    }
+
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
@@ -73,8 +79,7 @@ int main(int argc,char *argv[])
                 world_draw(w);
                 entity_draw_all();
 
-                collision_detection_test(test, newb);
-            
+         
         gf3d_vgraphics_render_end();
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition

@@ -8,7 +8,7 @@ typedef struct {
 }triangle3D;
 
 //https://www.toptal.com/game/video-game-physics-part-ii-collision-detection-for-solid-objects
-void collision_detection_test(Entity* self, Entity* other) {
+Bool collision_detection_test(Entity* self, World* other) {
     float d1x = self->min.x - other->max.x;
     float d1y = other->min.y - self->max.y;
     float d2x = self->min.x - other->max.x;
@@ -16,10 +16,10 @@ void collision_detection_test(Entity* self, Entity* other) {
     float d1z = self->min.z - other->max.z;
     float d2z = other->min.z - self->max.z;
 
-    if (d1x > 0.0 || d1y > 0.0 || d2z > 0.0)
+    if (d1x > 0.0 || d1y > 0.0 /* || d2z > 0.0*/)
         return false;
 
-    if (d2x > 0.0 || d2y > 0.0 || d2z > 0.0)
+    if (d2x > 0.0 || d2y > 0.0 /* || d2z > 0.0 */ )
         return false;
 
     return true;
@@ -32,5 +32,6 @@ void applyGravity(Entity* self) {
 
 void physics_update(Entity* self) {
 	if (!self)return;
-	self->position.z -= self->gravity;
+    if(self->min.z > -19)
+	    self->position.z -= self->gravity;
 }

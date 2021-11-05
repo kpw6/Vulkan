@@ -38,19 +38,24 @@ World *world_load(char *filename)
         gfc_matrix_identity(w->modelMat);
         gfc_matrix_scale(
             w->modelMat,
-            vector3d(20,20,20)
+            vector3d(50,50,50)
         );
         gfc_matrix_translate(
             w->modelMat,
-            vector3d(0,0,-20)
+            vector3d(0, 0, -20)
         );
     }
     else
     {
         slog("world data (%s) has no model",filename);
     }
+
+    vector3d_add(w->min, vector3d(0, 0, -20), vector3d(-19, -19, -19));
+    vector3d_add(w->max, vector3d(0, 0, -20), vector3d(19, 19, 19));
+
     sj_free(json);
     return w;
+
 }
 
 void world_draw(World *world)

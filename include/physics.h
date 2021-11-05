@@ -1,14 +1,15 @@
 #ifndef __PHYSICS_H__
 #define __PHYSICS_H__
 
-#include "Entity.h"
+#include "entity.h"
+#include "world.h"
 
 
 /**
  * @brief detects when entities touch each other
  * @param 
  */
-void collision_detection_test(Entity* self, Entity* other);
+Bool collision_detection_test(Entity* self, World* other);
 /**
  * @brief applies gravity to an entity
  * @param entity that gravity is applied too

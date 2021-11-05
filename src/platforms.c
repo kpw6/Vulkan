@@ -22,7 +22,7 @@ Entity *platforms_new(Vector3D position)
     ent->model = gf3d_model_load("mplatform");
     ent->think = platforms_think;
     ent->update = platforms_update;
-    gfc_matrix_make_translation(ent->modelMat, position);
+    ent->position = position;
     return ent;
 }
 
@@ -31,22 +31,18 @@ void platforms_think(Entity *self)
 {
     switch (x) {
     case 0: 
-        if (self->position.x > .5) {
+        if (self->position.x > .9) {
             x = 1;
             break;
         }
         self->position.x += .01; 
-        self->min.x += .01;
-        self->max.x += .01;
         break;
     case 1:
-        if (self->position.x < -.5) {
+        if (self->position.x < -.9) {
             x = 0;
             break;
         }
         self->position.x -= .01;
-        self->min.x -= .01;
-        self->max.x -= .01;
         break;
     }
 
