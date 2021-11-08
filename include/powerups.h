@@ -8,7 +8,7 @@
 * @param position is where the entity spawns
 * @param is the type of powerup that is created (0-4)
 */
-Entity powerups_new(Vector3D position, int type);
+Entity* powerups_new(Vector3D position, int type);
 
 /**
 * @brief update for powerups

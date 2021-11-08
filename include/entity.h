@@ -16,10 +16,9 @@ typedef struct Entity_S
     void       (*draw)(struct Entity_S *self); /**<pointer to an optional extra draw funciton*/
     void       (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void       (*onDeath)(struct Entity_S *self); /**<pointer to an funciton to call when the entity dies*/
-    void       (*touch)(struct Entity_S* self, struct Entity_S *other); /**<pointer to the on touch function*/
-    void       (*hitbox)(struct Entity_S* self, Vector3D min, Vector3D max); /**<pointer to a players hitbox>*/
+    void       (*touch)(struct Entity_S* self); /**<pointer to the on touch function*/
 
-    Vector3D    min, max; /**<The min and max of points>*/
+    Vector3D    min, max;
     Vector3D    position;  
     Vector3D    velocity;
     Vector3D    acceleration;
@@ -29,6 +28,14 @@ typedef struct Entity_S
     Vector3D    rotation;
 
     float gravity; //float used for strength of gravity
+    float radius; //helps create a radius for entites
+    float jPower; //jump power for player
+    float speed;
+    int tag;
+    int type; //in case an entity needs a type
+
+    Bool doubleJump; //toggle double jump
+    Bool jPack; //toggle jetpack effect
     
     Uint32      health;     /**<entity dies when it reaches zero*/
     // WHATEVER ELSE WE MIGHT NEED FOR ENTITIES
@@ -68,6 +75,18 @@ void entity_draw(Entity *self);
 void entity_draw_all();
 
 /**
+*@brief touch function
+* 
+*/
+void entity_ontouch(Entity* self, Entity *other);
+
+/**
+*@brief entity death function
+*
+*/
+void entity_onDeath(Entity* self);
+
+/**
  * @brief Call an entity's think function if it exists
  * @param self the entity in question
  */
@@ -84,8 +103,13 @@ void entity_think_all();
 void entity_update_all();
 
 /**
- * @brief what an entity does on touch of other entity
+ * @brief updates entity physics
  */
-void entity_on_touch(Entity *self, Entity *other);
+void entity_physics_update(Entity *self, Entity *other);
+
+void entity_physics_all();
+
+
+
 
 #endif

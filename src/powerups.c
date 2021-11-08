@@ -1,13 +1,13 @@
 #include "powerups.h"
 #include "simple_logger.h"
+#include "physics.h"
 
 static int ptype;
 
 void powerups_think(Entity *self);
 void powerups_ontouch(Entity* self, Entity* other);
 
-Entity powerups_new(Vector3D position, int type) {
-	ptype = type;
+Entity* powerups_new(Vector3D position, int type) {
 	Entity* ent = entity_new();
 	if (!ent) {
 		slog("failure to make a powerup");
@@ -34,26 +34,42 @@ Entity powerups_new(Vector3D position, int type) {
 	ent->touch = powerups_ontouch;
 	ent->position = position;
 	ent->scale = vector3d(0.2, 0.2, 0.2);
+	ent->rotation = vector3d(0, 0, 0);
+	ent->radius = 0.5;
 	gfc_matrix_scale(ent->modelMat, ent->scale);
+	ent->type = type;
 
+	return ent;
 }
 
 void powerups_think(Entity* self) {
+	self->rotation.z += .01;
 
 }
 
 void powerups_ontouch(Entity* self, Entity* other) {
-	switch (ptype) {
+	switch (self->type) {
 	case 0: //double speed
-		vector3d_multiply(other->velocity, vector3d(2, 2, 2));
+		other->speed *= 2;
+		slog("powerup 1 active");
 		break;
 	case 1: //super jump
+		slog("powerup 2 active");
+		other->jPower *= 2;
 		break;
 	case 2: //jetpack
+		slog("powerup 3 active");
+		other->jPack = true;
 		break;
 	case 3: //double jump
+		slog("powerup 4 active");
+		other->doubleJump = true;
 		break;
 	case 4: //second heart
+		other->health += 1;
+		slog("powerup 5 active");
 		break;
 	}
+	entity_free(self);
+	slog("powerup dismantled");
 }

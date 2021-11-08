@@ -27,10 +27,21 @@ Entity* player_new(Vector3D position, int player)
     applyGravity(ent);
     ent->scale = vector3d(0.1, 0.1, 0.1);
     gfc_matrix_scale(ent->modelMat, ent->scale);
-    ent->velocity = vector3d(1, 1, 1);
+    //ent->velocity = vector3d(1, 1, 1);
+    ent->health = 1;
+    ent->jPower = 3;
+    ent->jPack = false;
+    ent->radius = 0.05;
+    ent->speed = 0.1;
     return ent;
 }
 
+Bool isJumping(Entity* self) {
+    if (self->position.z > -17) {
+        return true;
+    }
+    return false;
+}
 
 void player_think(Entity *self)
 {
@@ -46,23 +57,33 @@ void player_think(Entity *self)
     vector3d_set_magnitude(&right,0.1);
     vector3d_set_magnitude(&up,0.1);
 
-    if (keys[SDL_SCANCODE_UP])
+    if (keys[SDL_SCANCODE_UP] && self->position.y < 48)
     {   
-        vector3d_add(self->position,self->position,-right);
+        self->position.y += self->speed;
     }
-    if (keys[SDL_SCANCODE_DOWN])
+    if (keys[SDL_SCANCODE_DOWN] && self->position.y > -48)
     {
-        vector3d_add(self->position,self->position,right);   
+        self->position.y -= self->speed;
     }
-    if (keys[SDL_SCANCODE_LEFT])
+    if (keys[SDL_SCANCODE_LEFT] && self->position.x > -55)
     {
-        vector3d_add(self->position,self->position,-forward);
+        self->position.x -= self->speed;
     }
-    if (keys[SDL_SCANCODE_RIGHT])    
+    if (keys[SDL_SCANCODE_RIGHT] && self->position.x < 45)    
     {
-        vector3d_add(self->position,self->position,forward);
+        self->position.x += self->speed;
     }
-    if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.010;  
+
+    switch (self->jPack) {
+    case true:
+        if (keys[SDL_SCANCODE_SPACE])self->position.z += 0.5;
+        break;
+    case false:
+        if (!isJumping(self)) {
+            if (keys[SDL_SCANCODE_SPACE])self->position.z += self->jPower;
+        }
+        break;
+    }
 
 }
 
@@ -71,7 +92,8 @@ void player_update(Entity *self)
     if (!self)return;
     gf3d_camera_set_position(self->position, vector3d(0, 5, 0));
     //gf3d_camera_set_rotation(self->rotation);
-    physics_update(self);
+    applyGravity(self);
+    if (self->health <= 0) entity_onDeath(self);
 }
 
 /*eol@eof*/

@@ -1,5 +1,5 @@
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef __PLATFORMS_H__
+#define __PLATFORMS_H__
 
 #include "entity.h"
 

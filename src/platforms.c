@@ -45,14 +45,11 @@ void platforms_think(Entity *self)
         self->position.x -= .01;
         break;
     }
-
-
-
 }
 
 void platforms_update(Entity *self)
 {
-    physics_update(self);
+   // physics_update(self);
 }
 
 /*eol@eof*/

@@ -4,6 +4,7 @@
 #include "simple_logger.h"
 
 #include "entity.h"
+#include "physics.h"
 
 typedef struct
 {
@@ -51,6 +52,7 @@ Entity *entity_new()
             entity_manager.entity_list[i].scale.x = 1;
             entity_manager.entity_list[i].scale.y = 1;
             entity_manager.entity_list[i].scale.z = 1;
+            entity_manager.entity_list[i].tag = i;
             return &entity_manager.entity_list[i];
         }
     }
@@ -71,8 +73,6 @@ void entity_draw(Entity *self)
 {
     if (!self)return;
     gf3d_model_draw(self->model,self->modelMat);
-    vector3d_add(self->min, self->position, vector3d(-.1, -.1, -.1));
-    vector3d_add(self->max, self->position, vector3d(.1, .1, .1));
 }
 
 void entity_draw_all()
@@ -88,10 +88,21 @@ void entity_draw_all()
     }
 }
 
+void entity_ontouch(Entity* self, Entity *other) {
+    slog("self->tag: &i", self->tag, "&i");
+    if (self->touch)self->touch(self);
+    if (other->touch)other->touch(other, self);
+}
+
 void entity_think(Entity *self)
 {
     if (!self)return;
     if (self->think)self->think(self);
+}
+
+void entity_onDeath(Entity* self) {
+    self->position = vector3d(0, 0, -15);
+    self->health = 1;
 }
 
 void entity_think_all()
@@ -114,7 +125,7 @@ void entity_update(Entity *self)
     // HANDLE ALL COMMON UPDATE STUFF
     
     //vector3d_add(self->position,self->position,self->velocity);
-    //vector3d_add(self->velocity,self->acceleration,self->velocity);
+    vector3d_add(self->velocity,self->acceleration,self->velocity);
     
     gfc_matrix_identity(self->modelMat);
     gfc_matrix_scale(self->modelMat,self->scale);
@@ -124,8 +135,10 @@ void entity_update(Entity *self)
     //gfc_matrix_rotate(self->modelMat,self->modelMat,self->rotation.x,vector3d(1,0,0));
     
     gfc_matrix_translate(self->modelMat,self->position);
+
     
     if (self->update)self->update(self);
+
 
 }
 
@@ -139,6 +152,24 @@ void entity_update_all()
             continue;// skip this iteration of the loop
         }
         entity_update(&entity_manager.entity_list[i]);
+    }
+}
+
+void entity_physics_update(Entity* self, Entity *other) {
+    if (!circle_collision_test(self, other) > self->radius + other->radius) {
+        entity_ontouch(self, other);
+    }
+}
+
+void entity_physics_all() {
+    int i;
+    int x;
+    for (i = 0; i < entity_manager.entity_count; i++)
+    {
+        for (x = 0; x < entity_manager.entity_count; x++) {
+            if (!entity_manager.entity_list[i]._inuse || !entity_manager.entity_list[x]._inuse || x == i) continue;
+            entity_physics_update(&entity_manager.entity_list[i], &entity_manager.entity_list[x]);
+        }
     }
 }
 

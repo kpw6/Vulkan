@@ -17,6 +17,10 @@
 #include "world.h"
 #include "platforms.h"
 #include "powerups.h"
+#include "spikes.h"
+#include "dispenser.h"
+#include "lava.h"
+#include "deathball.h"
 
 int main(int argc,char *argv[])
 {
@@ -24,6 +28,9 @@ int main(int argc,char *argv[])
     int a;
     Uint8 validate = 0;
     const Uint8 * keys;
+    Entity* player;
+    Entity* spikes;
+    Entity* powerup;
     
     World *w;
     
@@ -56,9 +63,13 @@ int main(int argc,char *argv[])
     gf3d_camera_set_scale(vector3d(1,1,1));
     
     slog("gf3d main loop begin");
-    player_new(vector3d(0,0,0), 0);
-    platforms_new(vector3d(0, 20, -10));
-    powerups_new(vector3d(5, 10, -19), 0);
+    player = player_new(vector3d(0,0,0), 0);
+    platforms_new(vector3d(0, 20, -15));
+    spikes = spikes_new(vector3d(0, 10, -19.5));
+    powerup = powerups_new(vector3d(0, 15, -19), 4);
+    dispenser_new(vector3d(3, 10, -19));
+    lava_new(vector3d(5, 5, -19.5));
+    deathball_new(vector3d(5, 20, -19.5));
     for (int i = 0; i <= 4; i++) {
        powerups_new(vector3d(i + 5, i + 10, -19), i);
     }
@@ -69,6 +80,7 @@ int main(int argc,char *argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         entity_think_all();
         entity_update_all();
+        entity_physics_all();
         gf3d_camera_update_view();
         gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
 
@@ -78,9 +90,9 @@ int main(int argc,char *argv[])
 
                 world_draw(w);
                 entity_draw_all();
-
          
         gf3d_vgraphics_render_end();
+
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
     }    

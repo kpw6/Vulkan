@@ -4,12 +4,19 @@
 #include "entity.h"
 #include "world.h"
 
-
 /**
  * @brief detects when entities touch each other
  * @param 
  */
-Bool collision_detection_test(Entity* self, World* other);
+Bool collision_detection_test(Entity* self, Entity* other);
+
+Bool circle_collision_test(Entity* self, Entity* other);
+/**
+ * @brief checks to see if an entity has a hitbox
+ * @param entity that is being checked
+ */
+Bool checkminmax(Entity* self);
+
 /**
  * @brief applies gravity to an entity
  * @param entity that gravity is applied too
