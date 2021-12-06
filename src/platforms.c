@@ -45,6 +45,8 @@ void platforms_think(Entity *self)
         self->position.x -= .01;
         break;
     }
+    //self->min = vector3d_add(self->position, self->position, vector3d(-1,-1,-1));
+    //self->max = vector3d_add(self->position, self->position, vector3d(1, 1, 1));
 }
 
 void platforms_update(Entity *self)

@@ -51,5 +51,5 @@ void deathball_think(Entity* self) {
 }
 void deathball_ontouch(Entity* self, Entity* other) {
     other->health -= 1;
-    slog("healthy");
+    slog("deathball touch");
 }

@@ -2,7 +2,7 @@
 #include "simple_logger.h"
 
 //https://www.toptal.com/game/video-game-physics-part-ii-collision-detection-for-solid-objects
-Bool collision_detection_test(Entity* self, Entity* other) {
+int rect_detection_test(Entity* self, Entity* other) {
 	if (!self) return;
 	if (!other) return;
 	float d1x = self->min.x - other->max.x;
@@ -12,10 +12,10 @@ Bool collision_detection_test(Entity* self, Entity* other) {
 	float d1z = self->min.z - other->max.z;
 	float d2z = other->min.z - self ->max.z;
 
-	if (d1x > 0.0f && d1y > 0.0f || d1z > 0.0f) return false;
-	else if (d2x > 0.0f && d2y > 0.0f  || d2z > 0.0f) return false;
+	if (d1x > 0.0f && d1y > 0.0f || d1z > 0.0f) return 0;
+	else if (d2x > 0.0f && d2y > 0.0f  || d2z > 0.0f) return 0;
 
-	return true;
+	return 1;
 
 }
 Bool circle_collision_test(Entity* self, Entity* other) {
@@ -25,12 +25,20 @@ Bool circle_collision_test(Entity* self, Entity* other) {
 	return (sqrt(pow(d1x, 2) + pow(d1y, 2) + pow(d1z, 2)));
 }
 
+Bool rect_circle_detection_test(Entity* self, Entity* other) {
+
+}
+
 Bool checkminmax(Entity* self) {
 	if (!self) return;
 	if (self->min.x > 0 || self->min.z > 0 || self->min.y > 0 || self->max.x > 0 || self->max.z > 0 || self->max.y > 0) {
 		return true;
 	}
 	return false;
+}
+
+int collision_detection_test(Entity* self, Entity* other) {
+
 }
 
 void applyGravity(Entity* self) {

@@ -1,6 +1,7 @@
 #include "powerups.h"
 #include "simple_logger.h"
 #include "physics.h"
+#include "gfc_audio.h"
 
 static int ptype;
 
@@ -30,6 +31,7 @@ Entity* powerups_new(Vector3D position, int type) {
 		ent->model = gf3d_model_load("upgrade_sh");
 		break;
 	}
+	entity_assign_sound(ent, "sounds/thunder.mp3");
 	ent->think = powerups_think;
 	ent->touch = powerups_ontouch;
 	ent->position = position;
@@ -38,6 +40,7 @@ Entity* powerups_new(Vector3D position, int type) {
 	ent->radius = 0.5;
 	gfc_matrix_scale(ent->modelMat, ent->scale);
 	ent->type = type;
+	
 
 	return ent;
 }
@@ -70,6 +73,7 @@ void powerups_ontouch(Entity* self, Entity* other) {
 		slog("powerup 5 active");
 		break;
 	}
+	gfc_sound_play(self->sound, 0, 1, 0, -1);
 	entity_free(self);
 	slog("powerup dismantled");
 }

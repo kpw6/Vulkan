@@ -1,5 +1,6 @@
 #include "SDL_Timer.h"
 #include "simple_logger.h"
+#include "SDL_mixer.h"
 
 #include "spikes.h"
 #include "entity.h"
@@ -29,5 +30,5 @@ Entity* spikes_new(Vector3D position)
 
 void spikes_onTouch(Entity* self, Entity* other) {
     other->health -= 1;
-    slog("healthy");
+    slog("spikes touched");
 }

@@ -101,8 +101,18 @@ void entity_think(Entity *self)
 }
 
 void entity_onDeath(Entity* self) {
+    gfc_sound_play(self->sound, 0, 1, -1, -1);
     self->position = vector3d(0, 0, -15);
     self->health = 1;
+}
+
+void entity_assign_sound(Entity* self, char* filename) {
+    if (!self) return;
+    self->sound = gfc_sound_load(filename, 1.0, 0);
+    if (!self->sound) {
+        slog("failed to assign sound");
+        return;
+    }
 }
 
 void entity_think_all()
@@ -157,6 +167,9 @@ void entity_update_all()
 
 void entity_physics_update(Entity* self, Entity *other) {
     if (!circle_collision_test(self, other) > self->radius + other->radius) {
+        entity_ontouch(self, other);
+    }
+    if (!collision_detection_test(self, other)) {
         entity_ontouch(self, other);
     }
 }

@@ -10,6 +10,7 @@
 #include "gf3d_model.h"
 #include "gf3d_camera.h"
 #include "gf3d_texture.h"
+#include "gfc_audio.h"
 
 #include "entity.h"
 #include "agumon.h"
@@ -55,13 +56,14 @@ int main(int argc,char *argv[])
 	slog_sync();
     
     entity_system_init(1024);
+    gfc_audio_init(1024, 1, 1, 5, true, true);
+    gfc_sound_init(1024);
     
     w = world_load("config/testworld.json");
 
     // main game loop
 	slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));
-    
     slog("gf3d main loop begin");
     player = player_new(vector3d(0,0,0), 0);
     platforms_new(vector3d(0, 20, -15));
@@ -98,7 +100,7 @@ int main(int argc,char *argv[])
     }    
     
     world_delete(w);
-    
+    gfc_sound_clear_all();
     vkDeviceWaitIdle(gf3d_vgraphics_get_default_logical_device());    
     //cleanup
     slog("gf3d program end");

@@ -18,6 +18,7 @@ Entity* player_new(Vector3D position, int player)
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
+    entity_assign_sound(ent, "sounds/oof.mp3");
     ent->model = gf3d_model_load("dino");
     ent->think = player_think;
     ent->update = player_update;

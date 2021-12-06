@@ -2,6 +2,7 @@
 #define __ENTITY_H__
 
 #include "gfc_types.h"
+#include "gfc_audio.h"
 
 #include "gf3d_model.h"
 
@@ -22,7 +23,8 @@ typedef struct Entity_S
     Vector3D    position;  
     Vector3D    velocity;
     Vector3D    acceleration;
-    
+
+    Sound *sound;
     
     Vector3D    scale;
     Vector3D    rotation;
@@ -87,6 +89,12 @@ void entity_ontouch(Entity* self, Entity *other);
 void entity_onDeath(Entity* self);
 
 /**
+*@brief assigns a sound to an entity
+*@param filename the file assigning to the entity
+*/
+void entity_assign_sound(Entity* self, char* filename);
+
+/**
  * @brief Call an entity's think function if it exists
  * @param self the entity in question
  */
@@ -108,6 +116,8 @@ void entity_update_all();
 void entity_physics_update(Entity *self, Entity *other);
 
 void entity_physics_all();
+
+
 
 
 

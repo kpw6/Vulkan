@@ -28,5 +28,5 @@ Entity* lava_new(Vector3D position)
 
 void lava_onTouch(Entity* self, Entity* other) {
     other->health -= 1;
-    slog("healthy");
+    slog("lava touch");
 }
