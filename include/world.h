@@ -15,11 +15,13 @@ typedef struct
     Model *worldModel;
     List *spawnList;        //entities to spawn
     List *entityList;       //entities that exist in the world
+
+    Vector3D min, max;      //min and max for world floor
 }World;
 
 World *world_load(char *filename);
 
-void world_draw(World *world,Uint32 bufferFrame,VkCommandBuffer commandBuffer);
+void world_draw(World *world);
 
 void world_delete(World *world);
 

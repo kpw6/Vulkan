@@ -15,6 +15,12 @@
 #include "agumon.h"
 #include "player.h"
 #include "world.h"
+#include "platforms.h"
+#include "powerups.h"
+#include "spikes.h"
+#include "dispenser.h"
+#include "lava.h"
+#include "deathball.h"
 
 int main(int argc,char *argv[])
 {
@@ -22,8 +28,9 @@ int main(int argc,char *argv[])
     int a;
     Uint8 validate = 0;
     const Uint8 * keys;
-    Uint32 bufferFrame = 0;
-    VkCommandBuffer commandBuffer;
+    Entity* player;
+    Entity* spikes;
+    Entity* powerup;
     
     World *w;
     
@@ -56,28 +63,36 @@ int main(int argc,char *argv[])
     gf3d_camera_set_scale(vector3d(1,1,1));
     
     slog("gf3d main loop begin");
-    player_new(vector3d(25,0,50));
+    player = player_new(vector3d(0,0,0), 0);
+    platforms_new(vector3d(0, 20, -15));
+    spikes = spikes_new(vector3d(0, 10, -19.5));
+    powerup = powerups_new(vector3d(0, 15, -19), 4);
+    dispenser_new(vector3d(3, 10, -19));
+    lava_new(vector3d(5, 5, -19.5));
+    deathball_new(vector3d(5, 20, -19.5));
+    for (int i = 0; i <= 4; i++) {
+       powerups_new(vector3d(i + 5, i + 10, -19), i);
+    }
+
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         entity_think_all();
         entity_update_all();
+        entity_physics_all();
         gf3d_camera_update_view();
         gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
 
         // configure render command for graphics command pool
         // for each mesh, get a command and configure it from the pool
-        bufferFrame = gf3d_vgraphics_render_begin();
-        gf3d_pipeline_reset_frame(gf3d_vgraphics_get_graphics_pipeline(),bufferFrame);
-            commandBuffer = gf3d_command_rendering_begin(bufferFrame);
+        gf3d_vgraphics_render_start();
 
-                world_draw(w,bufferFrame,commandBuffer);
-                entity_draw_all(bufferFrame,commandBuffer);
+                world_draw(w);
+                entity_draw_all();
+         
+        gf3d_vgraphics_render_end();
 
-            gf3d_command_rendering_end(commandBuffer);
-            
-        gf3d_vgraphics_render_end(bufferFrame);
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
     }    

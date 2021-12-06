@@ -4,15 +4,6 @@
 
 #include "world.h"
 
-/*
-typedef struct
-{
-
-    Model *worldModel;
-    List *spawnList;        //entities to spawn
-    List *entityList;       //entities that exist in the world
-}World;
-*/
 
 World *world_load(char *filename)
 {
@@ -47,26 +38,31 @@ World *world_load(char *filename)
         gfc_matrix_identity(w->modelMat);
         gfc_matrix_scale(
             w->modelMat,
-            vector3d(10,10,10)
+            vector3d(50,50,50)
         );
         gfc_matrix_translate(
             w->modelMat,
-            vector3d(0,0,-20)
+            vector3d(0, 0, -20)
         );
     }
     else
     {
         slog("world data (%s) has no model",filename);
     }
+
+    vector3d_add(w->min, vector3d(0, 0, -20), vector3d(-19, -19, -19));
+    vector3d_add(w->max, vector3d(0, 0, -20), vector3d(19, 19, 19));
+
     sj_free(json);
     return w;
+
 }
 
-void world_draw(World *world,Uint32 bufferFrame,VkCommandBuffer commandBuffer)
+void world_draw(World *world)
 {
     if (!world)return;
     if (!world->worldModel)return;// no model to draw, do nothing
-    gf3d_model_draw(world->worldModel,bufferFrame,commandBuffer,world->modelMat);
+    gf3d_model_draw(world->worldModel,world->modelMat);
 }
 
 void world_delete(World *world)
@@ -78,7 +74,11 @@ void world_delete(World *world)
 
 void world_run_updates(World *world);
 
-void world_add_entity(World *world,Entity *entity);
+void world_add_entity(World* world, Entity* entity) {
+    if (!world)return;
+    if (!entity)return;
+
+}
 
 
 /*eol@eof*/
