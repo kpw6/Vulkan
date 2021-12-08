@@ -7,8 +7,9 @@
 int x = 0;
 void platforms_think(Entity *self);
 void platforms_update(Entity *self);
+void mplatforms_ontouch(Entity* self, Entity* other);
 
-Entity *platforms_new(Vector3D position)
+Entity *platforms_new(Vector3D position, int type)
 {
     Entity *ent = NULL;
     
@@ -19,14 +20,75 @@ Entity *platforms_new(Vector3D position)
         return NULL;
     }
     
-    ent->model = gf3d_model_load("mplatform");
-    ent->think = platforms_think;
-    ent->update = platforms_update;
+    switch (type) {
+    case 0:
+        ent->model = gf3d_model_load("mplatform");
+        ent->think = platforms_think;
+        ent->update = platforms_update;
+        ent->touch = mplatforms_ontouch;
+        break;
+    case 1:
+        ent->model = gf3d_model_load("mplatform");
+        ent->think = platforms_think;
+        ent->update = platforms_update;
+        ent->touch = mplatforms_ontouch;
+        break;
+    case 2:
+        ent->model = gf3d_model_load("mplatform");
+        ent->think = platforms_think;
+        ent->update = platforms_update;
+        ent->touch = mplatforms_ontouch;
+        break;
+    case 3:
+        ent->model = gf3d_model_load("mplatform");
+        ent->think = platforms_think;
+        ent->update = platforms_update;
+        ent->touch = mplatforms_ontouch;
+        break;
+    case 4:
+        ent->model = gf3d_model_load("mplatform");
+        ent->think = platforms_think;
+        ent->update = platforms_update;
+        ent->touch = mplatforms_ontouch;
+        break;
+    }
+    ent->radius = 0.1;
     ent->position = position;
     return ent;
 }
 
 
+//Code for the moving platform touch function
+void mplatforms_ontouch(Entity* self, Entity* other) {
+    if (!self) return;
+    if (!other) return;
+    other->position.z += 0.8;
+    other->gravity = 0;
+}
+void ladder_ontouch(Entity* self, Entity* other) {
+    if (!self) return;
+    if (!other) return;
+    other->position.z += 0.8;
+    other->gravity = 0;
+}
+void monkeybars_ontouch(Entity* self, Entity* other) {
+    if (!self) return;
+    if (!other) return;
+    other->position.z += 0.8;
+    other->gravity = 0;
+}
+void trapdoor_ontouch(Entity* self, Entity* other) {
+    if (!self) return;
+    if (!other) return;
+    other->position.z += 0.8;
+    other->gravity = 0;
+}
+void mplatforms_ontouch(Entity* self, Entity* other) {
+    if (!self) return;
+    if (!other) return;
+    other->position.z += 0.8;
+    other->gravity = 0;
+}
 void platforms_think(Entity *self)
 {
     switch (x) {

@@ -10,6 +10,7 @@
 #include "gf3d_model.h"
 #include "gf3d_camera.h"
 #include "gf3d_texture.h"
+#include "gf3d_sprite.h"
 #include "gfc_audio.h"
 
 #include "entity.h"
@@ -33,6 +34,10 @@ int main(int argc,char *argv[])
     Entity* spikes;
     Entity* powerup;
     
+    Sprite* mouse = NULL;
+    int mousex, mousey;
+    float mouseFrame = 0;
+
     World *w;
     
     for (a = 1; a < argc;a++)
@@ -58,6 +63,8 @@ int main(int argc,char *argv[])
     entity_system_init(1024);
     gfc_audio_init(1024, 1, 1, 5, true, true);
     gfc_sound_init(1024);
+
+    mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16);
     
     w = world_load("config/testworld.json");
 
@@ -65,8 +72,8 @@ int main(int argc,char *argv[])
 	slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));
     slog("gf3d main loop begin");
-    player = player_new(vector3d(0,0,0), 0);
-    platforms_new(vector3d(0, 20, -15));
+    player = player_new(vector3d(0,0,-15), 1);
+    platforms_new(vector3d(0, -20, -19));
     spikes = spikes_new(vector3d(0, 10, -19.5));
     powerup = powerups_new(vector3d(0, 15, -19), 4);
     dispenser_new(vector3d(3, 10, -19));
@@ -80,6 +87,11 @@ int main(int argc,char *argv[])
     {
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
+        SDL_GetMouseState(&mousex, &mousey);
+
+        mouseFrame += 0.01;
+        if (mouseFrame >= 16)mouseFrame = 0;
+
         entity_think_all();
         entity_update_all();
         entity_physics_all();
@@ -92,6 +104,8 @@ int main(int argc,char *argv[])
 
                 world_draw(w);
                 entity_draw_all();
+
+                gf3d_sprite_draw(mouse, vector2d(mousex, mousey), vector2d(1, 1), (Uint32)mouseFrame);
          
         gf3d_vgraphics_render_end();
 

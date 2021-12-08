@@ -89,7 +89,7 @@ void entity_draw_all()
 }
 
 void entity_ontouch(Entity* self, Entity *other) {
-    slog("self->tag: &i", self->tag, "&i");
+    slog("self->tag: %i", self->tag, "%i");
     if (self->touch)self->touch(self);
     if (other->touch)other->touch(other, self);
 }

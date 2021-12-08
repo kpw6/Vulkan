@@ -6,9 +6,10 @@
 /**
  * @brief Create a new player entity
  * @param position where to spawn the aguman at
+ * @param type of platform to be created(0-4)
  * @return NULL on error, or an player entity pointer on success
  */
-Entity *platforms_new(Vector3D position);
+Entity *platforms_new(Vector3D position, int type);
 
 
 #endif

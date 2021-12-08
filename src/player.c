@@ -18,8 +18,40 @@ Entity* player_new(Vector3D position, int player)
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
+    switch(player) {
+    case 0: //all-around character
+        ent->model = gf3d_model_load("dino");
+        ent->speed = 0.1;
+        ent->health = 2;
+        ent->jPower = 3;
+        break;
+    case 1: //bulky character
+        ent->model = gf3d_model_load("dino");
+        ent->speed = 0.07;
+        ent->health = 4;
+        ent->jPower = 1;
+        break;
+    case 2: //speedy character
+        ent->model = gf3d_model_load("dino");
+        ent->speed = 0.3;
+        ent->health = 1;
+        ent->jPower = 5;
+        break;
+    case 3: //jetpack master
+        ent->model = gf3d_model_load("dino");
+        ent->speed = 0.15;
+        ent->health = 2;
+        ent->jPower = 7;
+        break;
+    case 4: //other
+        ent->model = gf3d_model_load("dino");
+        ent->speed = 0.1;
+        ent->health = 1;
+        ent->jPower = 3;
+        break;
+
+    }
     entity_assign_sound(ent, "sounds/oof.mp3");
-    ent->model = gf3d_model_load("dino");
     ent->think = player_think;
     ent->update = player_update;
     vector3d_copy(ent->position,position);
@@ -29,11 +61,8 @@ Entity* player_new(Vector3D position, int player)
     ent->scale = vector3d(0.1, 0.1, 0.1);
     gfc_matrix_scale(ent->modelMat, ent->scale);
     //ent->velocity = vector3d(1, 1, 1);
-    ent->health = 1;
-    ent->jPower = 3;
     ent->jPack = false;
     ent->radius = 0.05;
-    ent->speed = 0.1;
     return ent;
 }
 
