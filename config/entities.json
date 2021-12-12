@@ -1,0 +1,74 @@
+{
+  "player": {
+    "model": "dino",
+    "speed": "0.1",
+    "jump": "3",
+    "health": "1"
+  },
+  "heavyplayer": {
+    "model": "dino1",
+    "speed": "0.07",
+    "jump": "1",
+    "health": "4"
+  },
+  "speedyplayer": {
+    "model": "dino2",
+    "speed": "0.3",
+    "jump": "5",
+    "health": "1"
+  },
+  "scientistplayer": {
+    "model": "dino3",
+    "speed": "0.15",
+    "jump": "7",
+    "health": "2"
+  },
+  "fifthplayer": {
+    "model": "dino3",
+    "speed": "0.1",
+    "jump": "2",
+    "health": "2"
+  },
+  "movingplatform": {
+    "model": "mplatform"
+  },
+  "ladder": {
+    "model": "cube"
+  },
+  "replay": {
+    "model": "dino"
+  },
+  "spikes": {
+    "model": "spikes"
+  },
+  "deathball": {
+    "model": "cube"
+  },
+  "lava": {
+    "model": "lava"
+  },
+  "dispenser": {
+    "model": "cube"
+  },
+  "upgrade_jp": {
+    "model": "upgrade_jp"
+  },
+  "upgrade_dj": {
+    "model": "upgrade_dj"
+  },
+  "upgrade_sj": {
+    "model": "upgrade_sj"
+  },
+  "upgrade_ds": {
+    "model": "upgrade_ds"
+  },
+  "upgrade_sh": {
+    "model": "upgrade_sh"
+  },
+  "giant": {
+    "model": "dino1"
+  }
+  "jwalker": {
+    "model": "dino4"
+  }
+}

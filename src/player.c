@@ -1,53 +1,106 @@
 #include "simple_logger.h"
+#include "simple_json.h"
 #include "gfc_types.h"
 
 #include "gf3d_camera.h"
 #include "player.h"
+#include "replay.h"
 
 
 void player_think(Entity *self);
 void player_update(Entity *self);
+void player_onDeath(Entity* self);
 
-Entity* player_new(Vector3D position, int player)
+Entity* player_new(Vector3D position, int player, char* filename)
 {
+    float *speed;
     Entity *ent = NULL;
     
     ent = entity_new();
+
     if (!ent)
     {
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
+
+    SJson *json, *pjson;
+
+    json = sj_load(filename);
+    if (!json) {
+        slog("failed to load json file (%s) for the player data", filename);
+        return;
+    }
     switch(player) {
     case 0: //all-around character
-        ent->model = gf3d_model_load("dino");
-        ent->speed = 0.1;
-        ent->health = 2;
-        ent->jPower = 3;
+        pjson = sj_object_get_value(json, "player");
+        if (!pjson) {
+            slog("failed to find world object in entity config");
+            sj_free(json);
+            return NULL;
+        }
+
+        ent->model = gf3d_model_load(sj_get_string_value((char *)sj_object_get_value(pjson, "model")));
+        if (!ent->model) {
+            slog("failed to load player model");
+            sj_free(json);
+            return;
+        }
+        ent->speed = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "speed")));
+        ent->health = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "health")));;
+        ent->jPower = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "jump")));;
         break;
     case 1: //bulky character
-        ent->model = gf3d_model_load("dino");
-        ent->speed = 0.07;
-        ent->health = 4;
-        ent->jPower = 1;
+        pjson = sj_object_get_value(json, "heavyplayer");
+        if (!pjson) {
+            slog("failed to find world object in entity config");
+            sj_free(json);
+            return NULL;
+        }
+
+        ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
+        ent->speed = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "speed")));
+        ent->health = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "health")));;
+        ent->jPower = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "jump")));;
         break;
     case 2: //speedy character
-        ent->model = gf3d_model_load("dino");
-        ent->speed = 0.3;
-        ent->health = 1;
-        ent->jPower = 5;
+        pjson = sj_object_get_value(json, "speedyplayer");
+        if (!pjson) {
+            slog("failed to find world object in entity config");
+            sj_free(json);
+            return NULL;
+        }
+
+        ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
+        ent->speed = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "speed")));
+        ent->health = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "health")));;
+        ent->jPower = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "jump")));;
         break;
     case 3: //jetpack master
-        ent->model = gf3d_model_load("dino");
-        ent->speed = 0.15;
-        ent->health = 2;
-        ent->jPower = 7;
+        pjson = sj_object_get_value(json, "scientistplayer");
+        if (!pjson) {
+            slog("failed to find world object in entity config");
+            sj_free(json);
+            return NULL;
+        }
+
+        ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
+        ent->speed = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "speed")));
+        ent->health = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "health")));;
+        ent->jPower = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "jump")));;
         break;
     case 4: //other
-        ent->model = gf3d_model_load("dino");
-        ent->speed = 0.1;
-        ent->health = 1;
-        ent->jPower = 3;
+        pjson = sj_object_get_value(json, "fifthplayer");
+        if (!pjson) {
+            slog("failed to find world object in entity config");
+            sj_free(json);
+            return NULL;
+        }
+
+        ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
+        ent->speed = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "speed")));
+        ent->health = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "health")));;
+        ent->jPower = atof(sj_get_string_value((char*)sj_object_get_value(pjson, "jump")));;
         break;
 
     }
@@ -60,9 +113,10 @@ Entity* player_new(Vector3D position, int player)
     applyGravity(ent);
     ent->scale = vector3d(0.1, 0.1, 0.1);
     gfc_matrix_scale(ent->modelMat, ent->scale);
-    //ent->velocity = vector3d(1, 1, 1);
+    ent->velocity = vector3d(1, 1, 1);
     ent->jPack = false;
     ent->radius = 0.05;
+    ent->onDeath = player_onDeath;
     return ent;
 }
 
@@ -71,6 +125,15 @@ Bool isJumping(Entity* self) {
         return true;
     }
     return false;
+}
+
+void player_onDeath(Entity* self) {
+    if (!self)return;
+    gfc_sound_play(self->sound, 0, 1, -1, -1);
+    slog("wassup");
+    replay_new(self->position);
+    self->position = vector3d(0, 0, -15);
+    self->health = 1;
 }
 
 void player_think(Entity *self)
@@ -113,6 +176,10 @@ void player_think(Entity *self)
             if (keys[SDL_SCANCODE_SPACE])self->position.z += self->jPower;
         }
         break;
+    }
+
+    if (keys[SDL_SCANCODE_X]) {
+        gf3d_camera_set_rotation(vector3d(-90, 0, 0));
     }
 
 }

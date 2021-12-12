@@ -79,17 +79,18 @@ Model * gf3d_model_new()
 Model * gf3d_model_load(char * filename)
 {
     TextLine assetname;
-    Model *model;
+    Model* model;
     model = gf3d_model_new();
     if (!model)return NULL;
-    snprintf(assetname,GFCLINELEN,"models/%s.obj",filename);
+    snprintf(assetname, GFCLINELEN, "models/%s.obj", filename);
     model->mesh = gf3d_mesh_load(assetname);
 
-    snprintf(assetname,GFCLINELEN,"images/%s.png",filename);
+    snprintf(assetname, GFCLINELEN, "images/%s.png", filename);
     model->texture = gf3d_texture_load(assetname);
-    
+
     return model;
 }
+
 
 void gf3d_model_free(Model *model)
 {
@@ -108,14 +109,21 @@ void gf3d_model_delete(Model *model)
         vkFreeMemory(gf3d_model.device, model->uniformBuffersMemory[i], NULL);
     }
 
-    gf3d_mesh_free(model->mesh);
+    for (i = 0; i < model->framecount; i++)
+    {
+        gf3d_mesh_free(model->mesh[i]);
+    }
+    if (model->mesh)
+    {
+        free(model->mesh);
+    }
     gf3d_texture_free(model->texture);
     memset(model,0,sizeof(Model));
 }
 
 void gf3d_model_draw(Model *model,Matrix4 modelMat)
 {
-    VkDescriptorSet *descriptorSet = NULL;
+    VkDescriptorSet* descriptorSet = NULL;
     VkCommandBuffer commandBuffer;
     Uint32 bufferFrame;
     if (!model)
@@ -130,8 +138,8 @@ void gf3d_model_draw(Model *model,Matrix4 modelMat)
         slog("failed to get a free descriptor Set for model rendering");
         return;
     }
-    gf3d_model_update_basic_model_descriptor_set(model,*descriptorSet,bufferFrame,modelMat);
-    gf3d_mesh_render(model->mesh,commandBuffer,descriptorSet);
+    gf3d_model_update_basic_model_descriptor_set(model, *descriptorSet, bufferFrame, modelMat);
+    gf3d_mesh_render(model->mesh, commandBuffer, descriptorSet);
 }
 
 void gf3d_model_update_basic_model_descriptor_set(Model *model,VkDescriptorSet descriptorSet,Uint32 chainIndex,Matrix4 modelMat)

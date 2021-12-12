@@ -1,4 +1,5 @@
 #include "simple_logger.h"
+#include "simple_json.h"
 #include "gfc_types.h"
 
 #include "gf3d_camera.h"
@@ -11,6 +12,12 @@ void mplatforms_ontouch(Entity* self, Entity* other);
 
 Entity *platforms_new(Vector3D position, int type)
 {
+    SJson* json, * pjson;
+    json = sj_load("config/entities.json");
+    if (!json) {
+        slog("failed to load json file for the giant data");
+        return;
+    }
     Entity *ent = NULL;
     
     ent = entity_new();
@@ -21,25 +28,31 @@ Entity *platforms_new(Vector3D position, int type)
     }
     
     switch (type) {
-    case 0:
+    case 0: //moving platform
+        pjson = sj_object_get_value(json, "movingplatform");
+        if (!pjson) {
+            slog("failed to find world object in entity config");
+            sj_free(json);
+            return NULL;
+        }
+        ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
+        ent->think = platforms_think;
+        ent->update = platforms_update;
+        ent->touch = mplatforms_ontouch;
+        break;
+    case 1: //ladder
         ent->model = gf3d_model_load("mplatform");
         ent->think = platforms_think;
         ent->update = platforms_update;
         ent->touch = mplatforms_ontouch;
         break;
-    case 1:
+    case 2: //moneky bars
         ent->model = gf3d_model_load("mplatform");
         ent->think = platforms_think;
         ent->update = platforms_update;
         ent->touch = mplatforms_ontouch;
         break;
-    case 2:
-        ent->model = gf3d_model_load("mplatform");
-        ent->think = platforms_think;
-        ent->update = platforms_update;
-        ent->touch = mplatforms_ontouch;
-        break;
-    case 3:
+    case 3: //trapdoor
         ent->model = gf3d_model_load("mplatform");
         ent->think = platforms_think;
         ent->update = platforms_update;
@@ -83,12 +96,14 @@ void trapdoor_ontouch(Entity* self, Entity* other) {
     other->position.z += 0.8;
     other->gravity = 0;
 }
+/*
 void mplatforms_ontouch(Entity* self, Entity* other) {
     if (!self) return;
     if (!other) return;
     other->position.z += 0.8;
     other->gravity = 0;
 }
+*/
 void platforms_think(Entity *self)
 {
     switch (x) {

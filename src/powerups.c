@@ -1,5 +1,6 @@
 #include "powerups.h"
 #include "simple_logger.h"
+#include "simple_json.h"
 #include "physics.h"
 #include "gfc_audio.h"
 
@@ -9,6 +10,12 @@ void powerups_think(Entity *self);
 void powerups_ontouch(Entity* self, Entity* other);
 
 Entity* powerups_new(Vector3D position, int type) {
+	SJson* json, * pjson;
+	json = sj_load("config/entities.json");
+	if (!json) {
+		slog("failed to load json file for the giant data");
+		return;
+	}
 	Entity* ent = entity_new();
 	if (!ent) {
 		slog("failure to make a powerup");
@@ -16,19 +23,49 @@ Entity* powerups_new(Vector3D position, int type) {
 	}
 	switch (type) {
 	case 0: //double speed
-		ent->model = gf3d_model_load("upgrade_ds");
+		pjson = sj_object_get_value(json, "upgrade_ds");
+		if (!pjson) {
+			slog("failed to find world object in entity config");
+			sj_free(json);
+			return NULL;
+		}
+		ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
 		break;
 	case 1: //super jump
-		ent->model = gf3d_model_load("upgrade_sj");
+		pjson = sj_object_get_value(json, "upgrade_sj");
+		if (!pjson) {
+			slog("failed to find world object in entity config");
+			sj_free(json);
+			return NULL;
+		}
+		ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
 		break;
 	case 2: //jetpack
-		ent->model = gf3d_model_load("upgrade_jp");
+		pjson = sj_object_get_value(json, "upgrade_jp");
+		if (!pjson) {
+			slog("failed to find world object in entity config");
+			sj_free(json);
+			return NULL;
+		}
+		ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
 		break;
 	case 3: //double jump
-		ent->model = gf3d_model_load("upgrade_dj");
+		pjson = sj_object_get_value(json, "upgrade_dj");
+		if (!pjson) {
+			slog("failed to find world object in entity config");
+			sj_free(json);
+			return NULL;
+		}
+		ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
 		break;
 	case 4: //second heart
-		ent->model = gf3d_model_load("upgrade_sh");
+		pjson = sj_object_get_value(json, "upgrade_sh");
+		if (!pjson) {
+			slog("failed to find world object in entity config");
+			sj_free(json);
+			return NULL;
+		}
+		ent->model = gf3d_model_load(sj_get_string_value((char*)sj_object_get_value(pjson, "model")));
 		break;
 	}
 	entity_assign_sound(ent, "sounds/thunder.mp3");

@@ -12,6 +12,7 @@ typedef struct Entity_S
     Uint8       _inuse;     /**<keeps track of memory usage*/
     Matrix4     modelMat;   /**<orientation matrix for the model*/
     Model      *model;      /**<pointer to the entity model to draw  (optional)*/
+    Mesh       **mesh;
     void       (*think)(struct Entity_S *self); /**<pointer to the think function*/
     void       (*update)(struct Entity_S *self); /**<pointer to the update function*/
     void       (*draw)(struct Entity_S *self); /**<pointer to an optional extra draw funciton*/
@@ -23,6 +24,7 @@ typedef struct Entity_S
     Vector3D    position;  
     Vector3D    velocity;
     Vector3D    acceleration;
+    //Vector3D    gravity;
 
     Sound *sound;
     

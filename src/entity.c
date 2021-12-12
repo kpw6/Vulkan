@@ -6,6 +6,8 @@
 #include "entity.h"
 #include "physics.h"
 
+float frame = 0;
+
 typedef struct
 {
     Entity *entity_list;
@@ -72,7 +74,8 @@ void entity_free(Entity *self)
 void entity_draw(Entity *self)
 {
     if (!self)return;
-    gf3d_model_draw(self->model,self->modelMat);
+    gf3d_model_draw(self->model, self->modelMat);
+
 }
 
 void entity_draw_all()
@@ -89,7 +92,6 @@ void entity_draw_all()
 }
 
 void entity_ontouch(Entity* self, Entity *other) {
-    slog("self->tag: %i", self->tag, "%i");
     if (self->touch)self->touch(self);
     if (other->touch)other->touch(other, self);
 }
@@ -101,9 +103,9 @@ void entity_think(Entity *self)
 }
 
 void entity_onDeath(Entity* self) {
-    gfc_sound_play(self->sound, 0, 1, -1, -1);
-    self->position = vector3d(0, 0, -15);
-    self->health = 1;
+
+    if (!self)return;
+    if (self->think)self->onDeath(self);
 }
 
 void entity_assign_sound(Entity* self, char* filename) {

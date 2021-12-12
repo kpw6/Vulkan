@@ -63,6 +63,7 @@ typedef struct
         
     Pipeline                   *model_pipe;     /**<for rendering 3d*/
     Pipeline                   *overlay_pipe;   /**<for rendering 2d*/
+    Pipeline* translucent_pipe; //For rendering translucent ghost
 
     Command                 *   graphicsCommandPool; 
     UniformBufferObject         ubo;
@@ -71,6 +72,7 @@ typedef struct
     Uint32                      bufferFrame;
     VkCommandBuffer             commandModelBuffer;
     VkCommandBuffer             commandOverlayBuffer;
+    VkCommandBuffer             commandTranslucentBuffer;
 }vGraphics;
 
 static vGraphics gf3d_vgraphics = {0};
@@ -140,6 +142,7 @@ void gf3d_vgraphics_init(
     gf3d_pipeline_init(4);// how many different rendering pipelines we need
     gf3d_vgraphics.model_pipe = gf3d_pipeline_basic_model_create(device,"shaders/vert.spv","shaders/frag.spv",gf3d_vgraphics_get_view_extent(),1024);
     gf3d_vgraphics.overlay_pipe = gf3d_pipeline_basic_sprite_create(device,"shaders/sprite_vert.spv","shaders/sprite_frag.spv",gf3d_vgraphics_get_view_extent(),1024);
+    gf3d_vgraphics.translucent_pipe = gf3d_pipeline_translucent_model_create(device, "shaders/vert.spv", "shaders/frag.spv", gf3d_vgraphics_get_view_extent(), 1024);
      
     
     gf3d_command_system_init(8 * gf3d_swapchain_get_swap_image_count(), device);
@@ -438,6 +441,7 @@ void gf3d_vgraphics_render_start()
     
     gf3d_pipeline_reset_frame(gf3d_vgraphics_get_graphics_model_pipeline(),gf3d_vgraphics.bufferFrame);
     gf3d_pipeline_reset_frame(gf3d_vgraphics_get_graphics_overlay_pipeline(),gf3d_vgraphics.bufferFrame);
+    gf3d_pipeline_reset_frame(gf3d_vgraphics_get_graphics_translucent_pipeline(), gf3d_vgraphics.bufferFrame);
     
     gf3d_vgraphics.commandModelBuffer = gf3d_command_rendering_begin(
         gf3d_vgraphics.bufferFrame,
@@ -446,6 +450,10 @@ void gf3d_vgraphics_render_start()
     gf3d_vgraphics.commandOverlayBuffer = gf3d_command_rendering_begin(
         gf3d_vgraphics.bufferFrame,
         gf3d_vgraphics_get_graphics_overlay_pipeline());
+
+    gf3d_vgraphics.commandTranslucentBuffer = gf3d_command_rendering_begin(
+        gf3d_vgraphics.bufferFrame, 
+        gf3d_vgraphics_get_graphics_translucent_pipeline());
 }
 
 Uint32  gf3d_vgraphics_get_current_buffer_frame()
@@ -461,6 +469,11 @@ VkCommandBuffer gf3d_vgraphics_get_current_command_model_buffer()
 VkCommandBuffer gf3d_vgraphics_get_current_command_overlay_buffer()
 {
     return gf3d_vgraphics.commandOverlayBuffer;
+}
+
+VkCommandBuffer gf3d_vgraphics_get_current_command_translucent_buffer()
+{
+    return gf3d_vgraphics.commandTranslucentBuffer;
 }
 
 void gf3d_vgraphics_render_end()
@@ -734,6 +747,10 @@ Pipeline *gf3d_vgraphics_get_graphics_model_pipeline()
 Pipeline *gf3d_vgraphics_get_graphics_overlay_pipeline()
 {
     return gf3d_vgraphics.overlay_pipe;
+}
+Pipeline *gf3d_vgraphics_get_graphics_translucent_pipeline()
+{
+    return gf3d_vgraphics.translucent_pipe;
 }
 
 Command *gf3d_vgraphics_get_graphics_command_pool()

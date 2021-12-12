@@ -53,6 +53,8 @@ VkCommandBuffer gf3d_vgraphics_get_current_command_model_buffer();
  */
 VkCommandBuffer gf3d_vgraphics_get_current_command_overlay_buffer();
 
+VkCommandBuffer gf3d_vgraphics_get_current_command_translucent_buffer();
+
 
 /**
  * @brief After initialization 
@@ -95,6 +97,13 @@ Pipeline *gf3d_vgraphics_get_graphics_model_pipeline();
  * @return NULL on error or the pipeline in question
  */
 Pipeline *gf3d_vgraphics_get_graphics_overlay_pipeline();
+
+/**
+*@brief get the pipeline that is used to render a model as translucent
+* @return NULL on error or the pipeline in question
+*/
+Pipeline* gf3d_vgraphics_get_graphics_translucent_pipeline();
+
 
 Command *gf3d_vgraphics_get_graphics_command_pool();
 
