@@ -5,11 +5,13 @@
 #include "gf3d_camera.h"
 #include "player.h"
 #include "replay.h"
+#include "timer.h"
 
 
 void player_think(Entity *self);
 void player_update(Entity *self);
 void player_onDeath(Entity* self);
+int echecker = 0;
 
 Entity* player_new(Vector3D position, int player, char* filename)
 {
@@ -115,7 +117,7 @@ Entity* player_new(Vector3D position, int player, char* filename)
     gfc_matrix_scale(ent->modelMat, ent->scale);
     ent->velocity = vector3d(1, 1, 1);
     ent->jPack = false;
-    ent->radius = 0.05;
+    ent->radius = 1;
     ent->onDeath = player_onDeath;
     return ent;
 }
@@ -131,9 +133,25 @@ void player_onDeath(Entity* self) {
     if (!self)return;
     gfc_sound_play(self->sound, 0, 1, -1, -1);
     slog("wassup");
+    if (echecker == 1) {
+        entity_free(entity_latest());
+        slog("this ran");
+        echecker = 0;
+    }
     replay_new(self->position);
     self->position = vector3d(0, 0, -15);
     self->health = 1;
+    echecker = 1;
+
+    //save data to leaderboard
+    SJson *json, *sjson, *ljson;
+    json = sj_load("config/leaderboard.json");
+    if (!json) {
+        slog("Failed to load file leaderboard");
+        return;
+    }
+    ljson = sj_new_str("yeet");
+    sj_save(ljson, "config/leaderboard.json");
 }
 
 void player_think(Entity *self)

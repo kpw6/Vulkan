@@ -66,9 +66,24 @@
     "model": "upgrade_sh"
   },
   "giant": {
-    "model": "dino1"
-  }
+    "model": "dino1",
+    "active": "false"
+  },
   "jwalker": {
-    "model": "dino4"
+    "model": "dino3",
+    "active": "false"
+  },
+  "snail": {
+    "model": "dino2",
+    "active": "false"
+  },
+  "multiplyer": {
+    "model": "dino4",
+    "active": "true"
+  },
+  "archer": {
+    "model": "dino",
+    "active": "false"
   }
+
 }

@@ -62,7 +62,7 @@ void world_draw(World *world)
 {
     if (!world)return;
     if (!world->worldModel)return;// no model to draw, do nothing
-    gf3d_model_draw(world->worldModel,world->modelMat, 0);
+    gf3d_model_draw(world->worldModel,world->modelMat);
 }
 
 void world_delete(World *world)

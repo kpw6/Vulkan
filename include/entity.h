@@ -19,6 +19,7 @@ typedef struct Entity_S
     void       (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void       (*onDeath)(struct Entity_S *self); /**<pointer to an funciton to call when the entity dies*/
     void       (*touch)(struct Entity_S* self); /**<pointer to the on touch function*/
+    void        (*othink)(struct Entity_S* self, struct Entity_S* player);
 
     Vector3D    min, max;
     Vector3D    position;  
@@ -120,6 +121,15 @@ void entity_physics_update(Entity *self, Entity *other);
 void entity_physics_all();
 
 
+/*
+* @brief an function that allows a monster to track down the player
+*/
+void entity_tracker(Entity* self);
+
+/*
+* @brief returns the latest entity in the manager
+*/
+Entity* entity_latest();
 
 
 

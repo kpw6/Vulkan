@@ -99,26 +99,21 @@ void gf3d_model_free(Model *model)
 
 void gf3d_model_delete(Model *model)
 {
-    int i;
-    if (!model)return;
-    if (!model->_inuse)return;// not in use, nothing to do
-    
-    for (i = 0; i < model->uniformBufferCount; i++)
     {
-        vkDestroyBuffer(gf3d_model.device, model->uniformBuffers[i], NULL);
-        vkFreeMemory(gf3d_model.device, model->uniformBuffersMemory[i], NULL);
-    }
+        int i;
+        if (!model)return;
+        if (!model->_inuse)return;// not in use, nothing to do
 
-    for (i = 0; i < model->framecount; i++)
-    {
-        gf3d_mesh_free(model->mesh[i]);
+        for (i = 0; i < model->uniformBufferCount; i++)
+        {
+            vkDestroyBuffer(gf3d_model.device, model->uniformBuffers[i], NULL);
+            vkFreeMemory(gf3d_model.device, model->uniformBuffersMemory[i], NULL);
+        }
+
+        gf3d_mesh_free(model->mesh);
+        gf3d_texture_free(model->texture);
+        memset(model, 0, sizeof(Model));
     }
-    if (model->mesh)
-    {
-        free(model->mesh);
-    }
-    gf3d_texture_free(model->texture);
-    memset(model,0,sizeof(Model));
 }
 
 void gf3d_model_draw(Model *model,Matrix4 modelMat)

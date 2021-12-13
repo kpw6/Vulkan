@@ -14,19 +14,19 @@ int rect_detection_test(Entity* self, Entity* other);
  * @brief detects when entities touch through circle colliders
  * @param
  */
-Bool circle_collision_test(Entity* self, Entity* other);
+float circle_collision_test(Entity* self, Entity* other);
 
 /**
  * @brief detects when entities touch through rect and circle colliders
  * @param
  */
-Bool rect_circle_detection_test(Entity* self, Entity* other);
+int rect_circle_detection_test(Entity* self, Entity* other);
 
 /**
  * @brief checks to see if an entity has a hitbox
  * @param entity that is being checked
  */
-Bool checkminmax(Entity* self);
+int checkminmax(Entity* self);
 
 /**
  * @brief runs the correct collision test and does it.

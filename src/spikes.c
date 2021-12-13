@@ -24,7 +24,7 @@ Entity* spikes_new(Vector3D position)
     ent->touch = spikes_onTouch;
     gfc_matrix_scale(ent->modelMat, ent->scale);
     active = true;
-    ent->radius = 0.05;
+    ent->radius = 0.1;
     return ent;
 }
 

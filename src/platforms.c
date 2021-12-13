@@ -9,6 +9,11 @@ int x = 0;
 void platforms_think(Entity *self);
 void platforms_update(Entity *self);
 void mplatforms_ontouch(Entity* self, Entity* other);
+void ladder_ontouch(Entity* self, Entity* other);
+void monkeybars_ontouch(Entity* self, Entity* other);
+void trapdoor_ontouch(Entity* self, Entity* other);
+void rope_ontouch(Entity* self, Entity* other);
+
 
 Entity *platforms_new(Vector3D position, int type)
 {
@@ -39,33 +44,33 @@ Entity *platforms_new(Vector3D position, int type)
         ent->think = platforms_think;
         ent->update = platforms_update;
         ent->touch = mplatforms_ontouch;
+        ent->radius = 1;
         break;
     case 1: //ladder
         ent->model = gf3d_model_load("mplatform");
-        ent->think = platforms_think;
-        ent->update = platforms_update;
-        ent->touch = mplatforms_ontouch;
+        ent->touch = ladder_ontouch;
+        ent->scale = vector3d(0.5, 0.5, 20);
+        ent->radius = 1;
         break;
     case 2: //moneky bars
         ent->model = gf3d_model_load("mplatform");
-        ent->think = platforms_think;
-        ent->update = platforms_update;
-        ent->touch = mplatforms_ontouch;
+        ent->touch = monkeybars_ontouch;
+        ent->scale = vector3d(0.5, 5, 1);
+        ent->radius = 5;
         break;
     case 3: //trapdoor
         ent->model = gf3d_model_load("mplatform");
-        ent->think = platforms_think;
-        ent->update = platforms_update;
-        ent->touch = mplatforms_ontouch;
+        ent->touch = trapdoor_ontouch;
+        ent->radius = 1;
         break;
-    case 4:
+    case 4: //rope
         ent->model = gf3d_model_load("mplatform");
-        ent->think = platforms_think;
-        ent->update = platforms_update;
-        ent->touch = mplatforms_ontouch;
+        ent->touch = rope_ontouch;
+        ent->scale = vector3d(0.1, 0.1, 20);
+        ent->radius = 1;
         break;
     }
-    ent->radius = 0.1;
+    //ent->radius = 2;
     ent->position = position;
     return ent;
 }
@@ -75,35 +80,34 @@ Entity *platforms_new(Vector3D position, int type)
 void mplatforms_ontouch(Entity* self, Entity* other) {
     if (!self) return;
     if (!other) return;
+    slog("you are toching platform");
     other->position.z += 0.8;
-    other->gravity = 0;
 }
 void ladder_ontouch(Entity* self, Entity* other) {
     if (!self) return;
     if (!other) return;
-    other->position.z += 0.8;
+    other->position.z += .5;
     other->gravity = 0;
 }
 void monkeybars_ontouch(Entity* self, Entity* other) {
     if (!self) return;
     if (!other) return;
-    other->position.z += 0.8;
-    other->gravity = 0;
+    other->position.z = -18;
 }
 void trapdoor_ontouch(Entity* self, Entity* other) {
     if (!self) return;
     if (!other) return;
-    other->position.z += 0.8;
+    other->position.z -= 10;
     other->gravity = 0;
+    self->scale = (vector3d(0.1, 1, 20));
 }
-/*
-void mplatforms_ontouch(Entity* self, Entity* other) {
+
+void rope_ontouch(Entity* self, Entity* other) {
     if (!self) return;
     if (!other) return;
-    other->position.z += 0.8;
-    other->gravity = 0;
+    other->position.y += 10;
 }
-*/
+
 void platforms_think(Entity *self)
 {
     switch (x) {
@@ -122,8 +126,6 @@ void platforms_think(Entity *self)
         self->position.x -= .01;
         break;
     }
-    //self->min = vector3d_add(self->position, self->position, vector3d(-1,-1,-1));
-    //self->max = vector3d_add(self->position, self->position, vector3d(1, 1, 1));
 }
 
 void platforms_update(Entity *self)

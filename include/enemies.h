@@ -41,4 +41,46 @@ void cross_walk_think(Entity* self);
  */
 void cross_walk_ontouch(Entity* self, Entity* other);
 
+Entity* snail_new(Vector3D position);
+
+/**
+ * @brief Think function for big monster entity
+ * @param Entity that is using the function
+ */
+void snail_think(Entity* self);
+
+/**
+ * @brief Think function for big monster entity
+ * @param Entity that touches the other entity
+ */
+void snail_ontouch(Entity* self, Entity* other);
+
+Entity* multiplyer_new(Vector3D position);
+
+/**
+ * @brief Think function for big monster entity
+ * @param Entity that is using the function
+ */
+void multiplyer_think(Entity* self);
+
+/**
+ * @brief Think function for big monster entity
+ * @param Entity that touches the other entity
+ */
+void multiplyer_ontouch(Entity* self, Entity* other);
+
+Entity* archer_new(Vector3D position);
+
+/**
+ * @brief Think function for big monster entity
+ * @param Entity that is using the function
+ */
+void archer_think(Entity* self);
+
+/**
+ * @brief Think function for big monster entity
+ * @param Entity that touches the other entity
+ */
+void archer_ontouch(Entity* self, Entity* other);
+
 #endif

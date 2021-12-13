@@ -74,7 +74,7 @@ Entity* powerups_new(Vector3D position, int type) {
 	ent->position = position;
 	ent->scale = vector3d(0.2, 0.2, 0.2);
 	ent->rotation = vector3d(0, 0, 0);
-	ent->radius = 0.5;
+	ent->radius = 0.1;
 	gfc_matrix_scale(ent->modelMat, ent->scale);
 	ent->type = type;
 	

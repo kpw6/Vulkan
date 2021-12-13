@@ -23,10 +23,10 @@ Entity* lava_new(Vector3D position)
     ent->touch = lava_onTouch;
     gfc_matrix_scale(ent->modelMat, ent->scale);
     active = true;
+    ent->radius = 1;
     return ent;
 }
 
 void lava_onTouch(Entity* self, Entity* other) {
     other->health -= 1;
-    slog("lava touch");
 }

@@ -1,6 +1,7 @@
 #include <SDL.h>            
 
 #include "simple_logger.h"
+#include "simple_json.h"
 #include "gfc_vector.h"
 #include "gfc_matrix.h"
 
@@ -14,6 +15,7 @@
 #include "gfc_audio.h"
 
 #include "entity.h"
+#include "timer.h"
 #include "agumon.h"
 #include "player.h"
 #include "world.h"
@@ -45,7 +47,7 @@ int main(int argc,char *argv[])
     int mousex, mousey;
     float mouseFrame = 0;
     float item1frame = 0, item2frame = 0, item3frame = 0, item4frame = 0, item5frame = 0;
-
+    Timer* timer = NULL;
     World *w;
 
     SDL_TimerID time;
@@ -158,31 +160,37 @@ int main(int argc,char *argv[])
 
     // main game loop
 	slog_sync();
+    timer_assign(timer);
     gf3d_camera_set_scale(vector3d(1,1,1));
     slog("gf3d main loop begin");
     player = player_new(vector3d(0, 0, -15), type, "config/entities.json");
-    //platforms_new(vector3d(0, -20, -19), 0);
-    //spikes = spikes_new(vector3d(0, 10, -19.5));
-    //dispenser_new(vector3d(3, 10, -19));
-    //lava_new(vector3d(5, 5, -19.5));
-    //deathball_new(vector3d(5, 20, -19.5));
+    platforms_new(vector3d(0, -20, -19), 0);
+    spikes = spikes_new(vector3d(0, 10, -19.5));
+    dispenser_new(vector3d(3, 10, -19));
+    lava_new(vector3d(5, 5, -19.5));
+    deathball_new(vector3d(5, 20, -19.5));
     for (int i = 0; i <= 4; i++) {
-       //powerups_new(vector3d(i + 5, i + 10, -19), i);
+       powerups_new(vector3d(i + 5, i + 10, -19), i);
     }
-    //big_monster_new(vector3d(0, -100, 0));
-    //cross_walk_new(vector3d(20, -20, -19));
-    //time = SDL_AddTimer((33 / 10) * 10, callback, (Uint32) 32);
-
+    platforms_new(vector3d(-20, 20, -19), 1);
+    platforms_new(vector3d(20, 20, -17), 2);
+    platforms_new(vector3d(30, 40, -19), 3);
+    platforms_new(vector3d(28, 20, -19), 4);
+    big_monster_new(vector3d(0, -50, -10));
+    cross_walk_new(vector3d(20, -20, -19));
+    snail_new(vector3d(-50, -50, -19));
+    multiplyer_new(vector3d(-10, -10, -19));
+    archer_new(vector3d(-30, -10, -19));
     while(!done)
     {
-        //slog("(%s)", time);
+  
         SDL_PumpEvents();   // update SDL's internal event structures
+        //timer_update(timer);
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         SDL_GetMouseState(&mousex, &mousey);
 
         mouseFrame += 0.01;
         if (mouseFrame >= 16)mouseFrame = 0;
-
         entity_think_all();
         entity_update_all();
         entity_physics_all();

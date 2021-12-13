@@ -64,7 +64,10 @@ Entity *entity_new()
 
 void entity_free(Entity *self)
 {
-    if (!self)return;
+    if (!self) {
+        slog("no entity found to free");
+        return;
+    }
     //MUST DESTROY
     gf3d_model_free(self->model);
     memset(self,0,sizeof(Entity));
@@ -168,9 +171,6 @@ void entity_update_all()
 }
 
 void entity_physics_update(Entity* self, Entity *other) {
-    if (!circle_collision_test(self, other) > self->radius + other->radius) {
-        entity_ontouch(self, other);
-    }
     if (!collision_detection_test(self, other)) {
         entity_ontouch(self, other);
     }
@@ -186,6 +186,26 @@ void entity_physics_all() {
             entity_physics_update(&entity_manager.entity_list[i], &entity_manager.entity_list[x]);
         }
     }
+}
+
+void entity_tracker(Entity* tracker) {
+    if (tracker->position.x - entity_manager.entity_list[0].position.x >= 0) {
+        tracker->position.x -= .01;
+    }
+    else {
+        tracker->position.x += .01;
+    }
+    if (tracker->position.y - entity_manager.entity_list[0].position.y >= 0) {
+        tracker->position.y -= .01;
+    }
+    else {
+        tracker->position.y += .01;
+    }
+
+}
+Entity* entity_latest() {
+
+    return (&entity_manager.entity_list[entity_manager.entity_count - 1]);
 }
 
 /*eol@eof*/
